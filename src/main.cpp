@@ -44,7 +44,7 @@ void startLoRA() {
 
 
 void sendReadings() {
-  LoRaMessage = String(readingID) + "/" + String(tempAgua);
+  LoRaMessage = String(readingID) + "/" + String(tempAgua)+ "&" + String(ph);
   LoRa.beginPacket();
   LoRa.print(LoRaMessage);
   LoRa.endPacket();
@@ -101,13 +101,14 @@ void loop() {
 
   if(readingID<101){
     get_values_ds18b20();
+    get_values_ph4502c();    
 
     sendReadings();
     saveReadingID(); // Salva o valor atual de readingID no SPIFFS
     idleLoRA(); 
     delay(10000); // Delay para permitir o modo idle
 
-    Serial.println("Entering deep sleep for 20 seconds...");
+    Serial.println("Entering deep sleep for 5 minutes...");
     esp_sleep_enable_timer_wakeup(300 * 1000000); // Tempo de deep sleep em microsegundos
     esp_deep_sleep_start();
   } 
